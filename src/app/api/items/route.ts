@@ -36,3 +36,19 @@ export async function PATCH(req: NextRequest) {
 
   return NextResponse.json({ success: true })
 }
+
+export async function GET() {
+  const userId = '75044bcc-502c-4555-839f-1d87054a37ba'
+
+  const { data, error } = await supabase
+    .from('items')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+
+  return NextResponse.json(data)
+}
