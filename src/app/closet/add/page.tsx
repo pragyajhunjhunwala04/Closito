@@ -49,10 +49,16 @@ export default function AddItemPage() {
     // 3. Auto-tag with Claude Vision
     setStatus('AI tagging...')
     const tagRes = await fetch('/api/autotag', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ imageUrl: publicUrl }),
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ imageUrl: publicUrl }),
     })
+
+    if (!tagRes.ok) {
+    const errText = await tagRes.text()
+    throw new Error(`Autotag failed: ${errText}`)
+    }
+
     const tagData = await tagRes.json()
     if (tagData.error) throw new Error(JSON.stringify(tagData))
 

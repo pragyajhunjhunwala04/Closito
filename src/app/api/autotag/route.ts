@@ -48,9 +48,10 @@ Return only the JSON, no explanation.`,
   const text = response.content[0].type === 'text' ? response.content[0].text : ''
 
   try {
-    const tags = JSON.parse(text)
-    return NextResponse.json(tags)
-  } catch {
-    return NextResponse.json({ error: 'Failed to parse AI response', raw: text }, { status: 500 })
-  }
+  const clean = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
+  const tags = JSON.parse(clean)
+  return NextResponse.json(tags)
+    } catch {
+  return NextResponse.json({ error: 'Failed to parse AI response', raw: text }, { status: 500 })
+    }
 }
